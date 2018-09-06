@@ -5,7 +5,7 @@ from django.utils.text import Truncator
 
 class Topic(models.Model):
     name = models.CharField(max_length=30, unique=True)
-    flag = models.BooleanField(default=True)
+    activate = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     modified_at = models.DateTimeField(auto_now=True, editable=False)
 
