@@ -1,3 +1,11 @@
-from django.shortcuts import render
+from django.http import JsonResponse
+from .models import Topic
+from .serializers import TopicSerializer
 
-# Create your views here.
+
+def topics_list(request):
+    topics = Topic.objects.all()
+    serializer = TopicSerializer(topics, many=True)
+    return JsonResponse(serializer.data, safe=False)
+
+
