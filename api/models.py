@@ -13,7 +13,7 @@ class Topic(models.Model):
         return self.name
 
     def get_posts_count(self):
-        return Post.objects.filter(topic__board=self).count()
+        return Post.objects.filter(topic=self).count()
 
 
 class Post(models.Model):
