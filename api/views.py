@@ -3,6 +3,9 @@ from .models import Topic
 from .serializers import TopicSerializer
 
 
+def home(request):
+    return HttpResponse('<h1>API home page!<h1>')
+
 def topics_list(request):
     topics = Topic.objects.all()
     serializer = TopicSerializer(topics, many=True)
