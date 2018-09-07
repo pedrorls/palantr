@@ -25,7 +25,7 @@ SECRET_KEY = 'ebl0t231ra6lgv9@*(tl(8$(ogmq%fq2s$hv$2$*lwwgp+b7-v'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0']
 
 
 # Application definition
@@ -41,7 +41,6 @@ DEAFULT_APPS = [
 
 THIRD_PARTY_APPS = [
     'rest_framework',
-    'django_nose',
 ]
 
 LOCAL_APPS = [
@@ -132,7 +131,3 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
-
-
-#Tests
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
