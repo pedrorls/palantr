@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import Truncator
 
+
 class ActiveTopicManager(models.Manager):
     def get_queryset(self):
         return super(ActiveTopicManager, self).get_queryset().filter(activate=True)
@@ -20,7 +21,6 @@ class Topic(models.Model):
 
     def get_posts_count(self):
         return Post.objects.filter(topic=self).count()
-
 
 
 class Post(models.Model):
