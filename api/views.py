@@ -27,7 +27,7 @@ def topic_details(request, topic_pk):
     except:
         return Response({'status': 'Topic not available'}, status=HTTP_404_NOT_FOUND)
     serializer = TopicSerializer(topic, many=False)
-    return Response(serializer.data)
+    return Response(serializer.data, status=HTTP_200_OK)
 
 
 @api_view(['GET'])
@@ -35,4 +35,15 @@ def topic_posts(request, topic_pk):
     topic = Topic.active_objects.get(pk=topic_pk)
     posts = topic.posts.all()
     serializer = PostSerialzer(posts, many=True)
-    return Response(serializer.data)
+    return Response(serializer.data, status=HTTP_200_OK)
+
+
+@api_view(['GET'])
+def post_details(request, topic_pk, post_pk):
+    try:
+        topic = Topic.active_objects.get(pk=topic_pk)
+        post = topic.posts.get(pk=post_pk)
+    except:
+        return Response({'status': 'Post not available'}, status=HTTP_404_NOT_FOUND)
+    serializer = PostSerialzer(post, many=False)
+    return Response(serializer.data, status=HTTP_200_OK)
