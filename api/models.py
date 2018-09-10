@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.utils.text import Truncator
 
 
@@ -28,7 +27,7 @@ class Post(models.Model):
     topic = models.ForeignKey(Topic, related_name='posts', on_delete='CASCADE')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    created_by = models.ForeignKey(User, related_name='posts', on_delete='CASCADE')
+    created_by = models.CharField(max_length=100)
 
     def __str__(self):
         truncated_msg = Truncator(self.message)

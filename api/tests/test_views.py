@@ -37,18 +37,18 @@ class TopicViewTestCase(APITestCase):
         response = self.client.get(path)
         assert 'json' in response['content-type']
 
-    def test_if_can_retrieve_single_active_topic(self):
-        path = reverse('topic-details', kwargs={'topic_pk': self.topic.id})
+    def test_if_can_retrieve_active_topic_details(self):
+        path = reverse('topic-details', kwargs={'topic_name': self.topic.name})
         response = self.client.get(path)
         assert response.status_code == 200
 
     def test_if_returns_404_if_topic_does_not_exist(self):
-        path = reverse('topic-details', kwargs={'topic_pk': 100})
+        path = reverse('topic-details', kwargs={'topic_name': 'random'})
         response = self.client.get(path)
         assert response.status_code == 404
     
-    def test_if_returns_404_for_single_not_active_topic(self):
-        path = reverse('topic-details', kwargs={'topic_pk': self.topic2.id})
+    def test_if_returns_404_for_not_active_topic_details(self):
+        path = reverse('topic-details', kwargs={'topic_name': self.topic2.name})
         response = self.client.get(path)
         assert response.status_code == 404
 
@@ -58,25 +58,34 @@ class PostViewTestCase(APITestCase):
     def setUp(self):
         self.factory = Faker()
         self.topic = Topic.objects.create(name=self.factory.name())
-        self.user = User.objects.create(username=self.factory.name(), password=self.factory.password())
-        self.post = Post.objects.create(message=self.factory.sentence(), topic=self.topic, created_by=self.user)
+        self.post = Post.objects.create(
+            message=self.factory.sentence(),
+            topic=self.topic,
+            created_by=self.factory.name()
+        )
 
     def test_response_of_posts_status_code(self):
-        path = reverse('topic-posts', kwargs={'topic_pk': self.topic.id})
+        path = reverse('topic-posts', kwargs={'topic_name': self.topic.name})
         response = self.client.get(path)
         assert response.status_code == 200
 
     def test_if_post_returns_json(self):
-        path = reverse('topic-posts', kwargs={'topic_pk': self.topic.id})
+        path = reverse('topic-posts', kwargs={'topic_name': self.topic.name})
         response = self.client.get(path, format='json')
         assert 'json' in response['content-type']
 
-    def test_if_can_get_single_post(self):
-        path = reverse('post-details', kwargs={'topic_pk': self.topic.id, 'post_pk': self.post.id})
+    def test_if_can_get_post_details(self):
+        path = reverse('post-details', kwargs={'topic_name': self.topic.name, 'post_pk': self.post.id})
         response = self.client.get(path)
         assert response.status_code == 200
 
     def test_if_returns_404_for_unexistent_post(self):
-        path = reverse('post-details', kwargs={'topic_pk': self.topic.id, 'post_pk': 100})
+        path = reverse('post-details', kwargs={'topic_name': self.topic.name, 'post_pk': 100})
         response = self.client.get(path)
         assert response.status_code == 404
+
+    # def test_if_returns_404_if_not_found_posts(self):
+    #     topic = Topic.objects.create(name=self.factory.name())
+    #     path = reverse('topic-posts', kwargs={'topic_name': topic.name})
+    #     response = self.client.get(path, format='json')
+    #     assert response.status_code == 404
