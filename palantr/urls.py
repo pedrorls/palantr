@@ -19,6 +19,6 @@ from api.views import home
 
 urlpatterns = [
     path('', home, name='home'),
-    path('api/', include('api.urls')),
+    path('api/v1/', include('api.urls')),
     path('admin/', admin.site.urls),
 ]
