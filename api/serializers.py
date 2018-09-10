@@ -13,7 +13,6 @@ class TopicSerializer(serializers.ModelSerializer):
 
 class PostSerialzer(serializers.ModelSerializer):
     topic = serializers.StringRelatedField(many=False, read_only=True)
-    created_by = serializers.StringRelatedField(many=False, read_only=True)
 
     class Meta:
         model = Post

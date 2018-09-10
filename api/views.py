@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.status import (
     HTTP_200_OK,
+    HTTP_201_CREATED,
+    HTTP_400_BAD_REQUEST,
     HTTP_404_NOT_FOUND,
 )
 from .models import Topic
@@ -50,3 +52,14 @@ def post_details(request, topic_name, post_pk):
         return Response({'status': 'Post does not exist or not available'}, status=HTTP_404_NOT_FOUND)
     serializer = PostSerialzer(post, many=False)
     return Response(serializer.data, status=HTTP_200_OK)
+
+
+@api_view(['POST'])
+def create_post(request, topic_name):
+    serializer = PostSerialzer(data=request.data)
+    if serializer.is_valid():
+        topic = Topic.active_objects.get(name=topic_name)
+        serializer.validated_data['topic'] = topic
+        serializer.save()
+        return Response(serializer.data, status=HTTP_201_CREATED)
+    return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)

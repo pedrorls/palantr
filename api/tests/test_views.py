@@ -84,6 +84,12 @@ class PostViewTestCase(APITestCase):
         response = self.client.get(path)
         assert response.status_code == 404
 
+    def test_if_can_create_post(self):
+        path = reverse('create-post', kwargs={'topic_name': self.topic.name,})
+        data = {'message': self.factory.sentence(), 'created_by': self.factory.name()}
+        response = self.client.post(path, data, format='json')
+        assert response.status_code == 201
+
     # def test_if_returns_404_if_not_found_posts(self):
     #     topic = Topic.objects.create(name=self.factory.name())
     #     path = reverse('topic-posts', kwargs={'topic_name': topic.name})
