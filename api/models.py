@@ -24,6 +24,7 @@ class Topic(models.Model):
 
 class Post(models.Model):
     message = models.CharField(max_length=4000)
+    votes = models.IntegerField(default=0)
     topic = models.ForeignKey(Topic, related_name='posts', on_delete='CASCADE')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
