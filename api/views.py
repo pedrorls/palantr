@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.status import (
     HTTP_200_OK,
     HTTP_201_CREATED,
+    HTTP_204_NO_CONTENT,
     HTTP_400_BAD_REQUEST,
     HTTP_404_NOT_FOUND,
 )
@@ -63,3 +64,14 @@ def create_post(request, topic_name):
         serializer.save()
         return Response(serializer.data, status=HTTP_201_CREATED)
     return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+
+@api_view(['DELETE'])
+def delete_post(request, topic_name, post_pk):
+    try:
+        topic = Topic.active_objects.get(name=topic_name)
+        post = topic.posts.get(pk=post_pk)
+        post.delete()
+    except:
+        return Response(status=HTTP_400_BAD_REQUEST)    
+    return Response(status=HTTP_204_NO_CONTENT)

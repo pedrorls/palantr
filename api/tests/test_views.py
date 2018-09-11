@@ -90,8 +90,8 @@ class PostViewTestCase(APITestCase):
         response = self.client.post(path, data, format='json')
         assert response.status_code == 201
 
-    # def test_if_returns_404_if_not_found_posts(self):
-    #     topic = Topic.objects.create(name=self.factory.name())
-    #     path = reverse('topic-posts', kwargs={'topic_name': topic.name})
-    #     response = self.client.get(path, format='json')
-    #     assert response.status_code == 404
+
+    def test_if_can_delete_post(self):
+        path = reverse('delete-post', kwargs={'topic_name': self.topic.name, 'post_pk': self.post.id})
+        response = self.client.delete(path)
+        assert response.status_code == 204
