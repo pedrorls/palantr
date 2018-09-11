@@ -10,6 +10,7 @@ from rest_framework.status import (
 )
 from .models import Topic
 from .serializers import *
+from .utils import voted
 
 
 def home(request):
@@ -50,7 +51,7 @@ def post_details(request, topic_name, post_pk):
         topic = Topic.active_objects.get(name=topic_name)
         post = topic.posts.get(pk=post_pk)
     except:
-        return Response({'status': 'Post does not exist or not available'}, status=HTTP_404_NOT_FOUND)
+        return Response({'status': 'Post not available'}, status=HTTP_404_NOT_FOUND)
     serializer = PostSerialzer(post, many=False)
     return Response(serializer.data, status=HTTP_200_OK)
 
@@ -66,6 +67,17 @@ def create_post(request, topic_name):
             return Response(serializer.data, status=HTTP_201_CREATED)
     except:
         return Response({'status': 'Post does not exist!'}, status=HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def post_vote(request, topic_name, post_pk, vote):
+    try:
+        post = Post.objects.get(pk=post_pk)
+        post.votes += voted(vote)
+        post.save()
+        return Response({'status':'Thanks for voting!'}, status=HTTP_201_CREATED)
+    except:
+        return Response({'status': 'Sorry, vote could not be saved.'}, status=HTTP_400_BAD_REQUEST)
 
 
 @api_view(['DELETE'])

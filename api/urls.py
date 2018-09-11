@@ -7,5 +7,7 @@ urlpatterns = [
     path('topics/<str:topic_name>/posts/', topic_posts, name='topic-posts'),
     path('topics/<str:topic_name>/posts/create/', create_post, name='create-post'),
     path('topics/<str:topic_name>/posts/<int:post_pk>/', post_details, name='post-details'),
-    path('topics/<str:topic_name>/posts/<int:post_pk>/delete', delete_post, name='delete-post'),
+    path('topics/<str:topic_name>/posts/<int:post_pk>/delete/', delete_post, name='delete-post'),
+    path('topics/<str:topic_name>/posts/<int:post_pk>/<str:vote>/', post_vote, name='vote'),
+
 ]

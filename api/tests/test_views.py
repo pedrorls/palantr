@@ -138,3 +138,15 @@ class PostViewTestCase(APITestCase):
         path = reverse('delete-post', kwargs={'topic_name': self.topic.name, 'post_pk': post.id})
         response = self.client.delete(path, format='json')
         assert response.status_code == 400
+
+    def test_if_can_vote(self):
+        path = reverse('vote', kwargs={'topic_name': self.topic.name, 'post_pk': self.post.id, 'vote': 'upvote'})
+        data = {'votes': 1}
+        response = self.client.post(path, data, format='json')
+        assert response.status_code == 201
+
+    def test_if_cannot_vote(self):
+        path = reverse('vote', kwargs={'topic_name': self.topic.name, 'post_pk': 100, 'vote': 'upvote'})
+        data = {'votes': 1}
+        response = self.client.post(path, data, format='json')
+        assert response.status_code == 400
