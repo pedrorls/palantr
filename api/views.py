@@ -57,13 +57,15 @@ def post_details(request, topic_name, post_pk):
 
 @api_view(['POST'])
 def create_post(request, topic_name):
-    serializer = PostSerialzer(data=request.data)
-    if serializer.is_valid():
+    try:
         topic = Topic.active_objects.get(name=topic_name)
-        serializer.validated_data['topic'] = topic
-        serializer.save()
-        return Response(serializer.data, status=HTTP_201_CREATED)
-    return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+        serializer = PostSerialzer(data=request.data)
+        if serializer.is_valid():
+            serializer.validated_data['topic'] = topic
+            serializer.save()
+            return Response(serializer.data, status=HTTP_201_CREATED)
+    except:
+        return Response({'status': 'Post does not exist!'}, status=HTTP_400_BAD_REQUEST)
 
 
 @api_view(['DELETE'])
@@ -71,9 +73,9 @@ def delete_post(request, topic_name, post_pk):
     try:
         topic = Topic.active_objects.get(name=topic_name)
         post = topic.posts.get(pk=post_pk)
-        if post.votes < 5:
-            return Response({'status': 'Post did not reach the minimum votes to be deleted.'})
-        post.delete()
     except:
-        return Response({'status': 'Post does not exist or already deleted.'}, status=HTTP_400_BAD_REQUEST)    
-    return Response({'status': 'Post deleted!'},status=HTTP_204_NO_CONTENT)
+        return Response({'status': 'Post does not exist or already deleted.'}, status=HTTP_400_BAD_REQUEST)
+    if post.votes > -5:
+        return Response({'status': 'Post did not reach the minimum votes to be deleted.'}, HTTP_400_BAD_REQUEST)
+    post.delete()
+    return Response({'status': 'Post deleted!'}, status=HTTP_204_NO_CONTENT)

@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
-from django.urls import reverse
+from django.urls import reverse, resolve
 from rest_framework.test import APITestCase
 from faker import Faker
 from ..models import *
@@ -74,6 +74,12 @@ class PostViewTestCase(APITestCase):
         response = self.client.get(path, format='json')
         assert 'json' in response['content-type']
 
+    def test_retuns_error_if_posts_not_available(self):
+        topic = Topic.objects.create(name=self.factory.name())
+        path = reverse('topic-posts', kwargs={'topic_name': topic.name})
+        response = self.client.get(path)
+        assert response.content == b'[]'
+
     def test_if_can_get_post_details(self):
         path = reverse('post-details', kwargs={'topic_name': self.topic.name, 'post_pk': self.post.id})
         response = self.client.get(path)
@@ -90,19 +96,45 @@ class PostViewTestCase(APITestCase):
         response = self.client.post(path, data, format='json')
         assert response.status_code == 201
 
+    def test_return_error_if_cannot_create_post(self):
+        data = {
+            'message': self.factory.sentence(),
+            'created_by': self.factory.name(),
+            'votes': -5
+        }
+        path = reverse('create-post', kwargs={'topic_name': self.factory.name()})
+        response = self.client.post(path, data, format='json')
+        assert response.status_code == 400
 
-    def test_if_can_delete_post(self):
+
+    def test_if_delete_url_resolves_to_delete_post_view(self):
         path = reverse('delete-post', kwargs={'topic_name': self.topic.name, 'post_pk': self.post.id})
-        response = self.client.delete(path)
-        assert response.status_code == 200
+        response = resolve(path)
+        assert response.func == delete_post
 
-    def test_if_can_delete_only_posts_with_five_votes(self):
+    def test_delete_unavailable_post_returns_error(self):
+        path = reverse('delete-post', kwargs={'topic_name': self.topic.name, 'post_pk': 100})
+        response = self.client.delete(path)
+        assert response.status_code == 400
+
+    def test_if_can_delete_only_posts_with_minus_five_votes(self):
         post = Post.objects.create(
             message=self.factory.sentence(),
             topic=self.topic,
             created_by=self.factory.name(),
-            votes=5
+            votes=-5
         )
         path = reverse('delete-post', kwargs={'topic_name': self.topic.name, 'post_pk': post.id})
-        response = self.client.delete(path)
+        response = self.client.delete(path, format='json')
         assert response.status_code == 204
+
+    def test_if_cannot_delete_posts_with_less_than_minus_five_votes(self):
+        post = Post.objects.create(
+            message=self.factory.sentence(),
+            topic=self.topic,
+            created_by=self.factory.name(),
+            votes=-2
+        )
+        path = reverse('delete-post', kwargs={'topic_name': self.topic.name, 'post_pk': post.id})
+        response = self.client.delete(path, format='json')
+        assert response.status_code == 400
