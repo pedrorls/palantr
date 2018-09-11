@@ -94,4 +94,15 @@ class PostViewTestCase(APITestCase):
     def test_if_can_delete_post(self):
         path = reverse('delete-post', kwargs={'topic_name': self.topic.name, 'post_pk': self.post.id})
         response = self.client.delete(path)
+        assert response.status_code == 200
+
+    def test_if_can_delete_only_posts_with_five_votes(self):
+        post = Post.objects.create(
+            message=self.factory.sentence(),
+            topic=self.topic,
+            created_by=self.factory.name(),
+            votes=5
+        )
+        path = reverse('delete-post', kwargs={'topic_name': self.topic.name, 'post_pk': post.id})
+        response = self.client.delete(path)
         assert response.status_code == 204

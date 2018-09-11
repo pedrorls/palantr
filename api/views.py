@@ -37,7 +37,7 @@ def topic_details(request, topic_name):
 def topic_posts(request, topic_name):
     try:
         topic = Topic.active_objects.get(name=topic_name)
-        posts = topic.posts.all()
+        posts = topic.posts.order_by('-updated_at')[:20]
     except:
         return Response({'status': 'Posts not available'}, status=HTTP_404_NOT_FOUND)
     serializer = PostSerialzer(posts, many=True)
@@ -71,7 +71,9 @@ def delete_post(request, topic_name, post_pk):
     try:
         topic = Topic.active_objects.get(name=topic_name)
         post = topic.posts.get(pk=post_pk)
+        if post.votes < 5:
+            return Response({'status': 'Post did not reach the minimum votes to be deleted.'})
         post.delete()
     except:
-        return Response(status=HTTP_400_BAD_REQUEST)    
-    return Response(status=HTTP_204_NO_CONTENT)
+        return Response({'status': 'Post does not exist or already deleted.'}, status=HTTP_400_BAD_REQUEST)    
+    return Response({'status': 'Post deleted!'},status=HTTP_204_NO_CONTENT)
