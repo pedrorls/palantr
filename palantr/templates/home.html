@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Page Title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+<body>
+
+
+  <div class="container">
+    <h3>Palantr API Reference</h3>
+  
+    <p>Base URL `palantr.herokuapp.com/api/v1/`</p>
+  
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Endpoint</th>
+          <th>Method</th>
+          <th>Example</th>
+          <th>Sample Response</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><i>/topics/</i></td>
+          <td>GET</td>
+          <td>http://palantr.herokuapp.com/api/v1/topics/</td>
+          <td>
+            <pre class="jumbotron">
+            [
+              { id: 1,
+                title: 'Hi!',
+                categories: 'Computer, Friends',
+                content: 'Post about Friends'
+              },
+              {
+                id: 2,
+                title: 'New Post',
+                categories: 'Candy',
+                content: 'Post about Candy'
+              }
+            ]
+            </pre>
+          </td>
+          <td>
+            Fetches all the topics registered.</td>
+        </tr>
+        <tr>
+          <td><i>/topics/:topic_name</i></td>
+          <td>GET</td>
+          <td>http://reduxblog.herokuapp.com/api/v1/topics/:topic_name</td>
+          <td>
+            <pre class="jumbotron">
+            {
+              id: 1,
+              title: 'Hi!',
+              categories: 'Computer, Friends',
+              content: 'Blog post content'
+            }
+            </pre>
+          </td>
+          <td>Returns a single topic if it exists.</td>
+        </tr>
+        <tr>
+          <td><i>/topics/:topic_name/posts</i></td>
+          <td>GET</td>
+          <td>http://reduxblog.herokuapp.com/api/v1/topics/:topic_name/posts</td>
+          <td>
+            <pre class="jumbotron">
+            {
+              id: 1,
+              title: 'Hi!',
+              categories: 'Computer, Friends',
+              content: 'Blog post content'
+            }
+            </pre>
+          </td>
+          <td>Fetches all the posts related with the given topic.</td>
+        </tr>
+        <tr>
+          <td><i>/api/posts/:id</i></td>
+          <td>DELETE</td>
+          <td>http://reduxblog.herokuapp.com/api/posts/5</td>
+          <td>
+  <pre class="jumbotron">
+    {
+      id: 1,
+      title: 'Hi!',
+      categories: 'Computer, Friends',
+      content: 'Blog post content'
+    }
+  </pre>
+          </td>
+          <td>Deletes a single blog post with the given ID. Returns the post</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  
+  
+  
+  </body>
+</html>

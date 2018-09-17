@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.status import (
@@ -14,7 +14,7 @@ from .utils import voted
 
 
 def home(request):
-    return HttpResponse('<h1>API home page!<h1>')
+    return render(request, 'home.html', {})
 
 
 @api_view(['GET'])
